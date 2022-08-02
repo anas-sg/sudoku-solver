@@ -2,10 +2,11 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.filedialog
 import csv
-from pprint import pprint
 
 window = tk.Tk()
 window.title("Sudoku solver")
+style = ttk.Style()
+style.configure("Grey.TMenubutton", foreground="brown")
 options = [i for i in range(10)]
 puzzle = [[0] * 9 for i in range(9)]
 grid = [[0] * 9 for i in range(9)]
@@ -14,9 +15,24 @@ for i in range(9):
     for j in range(9):
         var = tk.StringVar(window)
         var.set(options[0]) # default value of 0
-        menu = ttk.OptionMenu(window, var, *options)
+        if (i // 3) % 2:
+            if (j // 3) % 2:
+                menu = ttk.OptionMenu(window, var, *options, style="Grey.TMenubutton")
+            else:
+                menu = ttk.OptionMenu(window, var, *options)
+        else:
+            if (j // 3) % 2:
+                menu = ttk.OptionMenu(window, var, *options)
+            else:
+                menu = ttk.OptionMenu(window, var, *options, style="Grey.TMenubutton")    
         menu.grid(column=j, row=i)
         grid[i][j] = var, menu
+        if i in {2, 5, 8}:
+            seph = ttk.Separator(window, orient='horizontal')
+            seph.grid(column=j, row=i, sticky="sew")
+        if j in {2, 5}:
+            sepv = ttk.Separator(window, orient='vertical')
+            sepv.grid(column=j, row=i, sticky="ens")
 
 def possible(y, x, n):
     for i in range(9):
